@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Text,
   TextInput,
@@ -10,6 +10,11 @@ import {
 } from "react-native";
 
 export const Login = ({ navigation }) => {
+  const [userId, setUserId] = useState();
+  const [password, setPassword] = useState();
+
+  const login = () => {};
+
   return (
     <View style={styles.container}>
       <View style={styles.box}>
@@ -18,14 +23,21 @@ export const Login = ({ navigation }) => {
           style={styles.logo}
         />
         <Text style={styles.loginText}>LOGIN</Text>
-        <TextInput style={styles.input} placeholder="아이디를 입력해주세요." />
+        <TextInput
+          style={styles.input}
+          placeholder="아이디를 입력해주세요."
+          onChangeText={(id) => setUserId(id)}
+        />
         <TextInput
           style={styles.input}
           placeholder="비밀번호를 입력해주세요."
           secureTextEntry
+          onChangeText={(pw) => setPassword(pw)}
         />
         <TouchableOpacity style={styles.button}>
-          <Text style={styles.login}>로그인</Text>
+          <Text style={styles.login} onPress={login}>
+            로그인
+          </Text>
         </TouchableOpacity>
         <Button
           onPress={() => navigation.navigate("SignUp")}
