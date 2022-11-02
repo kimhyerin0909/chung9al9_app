@@ -8,6 +8,7 @@ import {
   Image,
   Button,
 } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export const SignUp = ({ navigation }) => {
   const [userId, setUserId] = useState();
@@ -18,6 +19,13 @@ export const SignUp = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
+        <MaterialIcons
+          onPress={() => navigation.pop()}
+          name="arrow-back-ios"
+          style={styles.backBtn}
+          size={30}
+          color="black"
+        />
         <Image
           source={require("ch9al9-app/assets/logobgx.png")}
           style={styles.logo}
@@ -32,7 +40,10 @@ export const SignUp = ({ navigation }) => {
               청소년 사용자
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("BossSignUp")}
+          >
             <Text style={styles.signup} onPress={signUp}>
               사업자
             </Text>
@@ -54,12 +65,14 @@ const styles = StyleSheet.create({
   box: {
     width: "70%",
     height: "30%",
-    justifyContent: "space-between",
   },
   signupText: {
     fontSize: 30,
     fontWeight: "200",
     marginBottom: 20,
+  },
+  backBtn: {
+    marginBottom: "4%",
   },
   logo: {
     resizeMode: "contain",

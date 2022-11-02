@@ -6,8 +6,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  Button,
 } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export const YouthSignUp = ({ navigation }) => {
   const [userId, setUserId] = useState();
@@ -18,6 +18,12 @@ export const YouthSignUp = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
+        <MaterialIcons
+          onPress={() => navigation.pop()}
+          name="arrow-back-ios"
+          size={30}
+          color="black"
+        />
         <Image
           source={require("ch9al9-app/assets/logobgx.png")}
           style={styles.logo}
