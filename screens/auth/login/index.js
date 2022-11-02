@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
 import {
   Text,
@@ -8,12 +9,54 @@ import {
   Image,
   Button,
 } from "react-native";
+import client from "../../../utils/client";
 
 export const Login = ({ navigation }) => {
   const [userId, setUserId] = useState();
   const [password, setPassword] = useState();
 
-  const login = () => {};
+  const youthLogin = async () => {
+    if (userId && password) {
+      await client
+        .post("/login", {
+          user_id: 0,
+          id: userId,
+          pw: password,
+          nickname: "",
+        })
+        .then((res) => {
+          if (res.data.success) {
+            AsyncStorage.setItem("token", res.data.token);
+            navigation.navigate("Home");
+          } else {
+            alert(res.data.message);
+          }
+        });
+    } else {
+      alert("정보가 다 입력되지 않았습니다.");
+    }
+  };
+
+  const bossLogin = async () => {
+    if (userId && password) {
+      await client
+        .post("/enter/login", {
+          en_id: 0,
+          id: userId,
+          pw: password,
+          en_num: "",
+          comp_name: "",
+          captain: "",
+          address: "",
+          phone: "",
+        })
+        .then((res) => {
+          console.log(res);
+        });
+    } else {
+      alert("정보가 다 입력되지 않았습니다.");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -34,11 +77,22 @@ export const Login = ({ navigation }) => {
           secureTextEntry
           onChangeText={(pw) => setPassword(pw)}
         />
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.login} onPress={login}>
-            로그인
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.btnBox}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={bossLogin}
+            value={"boss"}
+          >
+            <Text style={styles.login}>사업자 로그인</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={youthLogin}
+            value={"youth"}
+          >
+            <Text style={styles.login}>청소년 로그인</Text>
+          </TouchableOpacity>
+        </View>
         <Button
           onPress={() => navigation.navigate("SignUp")}
           title="아직 회원이 아니신가요?"
@@ -83,10 +137,15 @@ const styles = StyleSheet.create({
   button: {
     alignItems: "center",
     justifyContent: "center",
-    width: "100%",
+    width: "49%",
     height: 40,
     backgroundColor: "#7C81FF",
     borderRadius: 10,
   },
   login: { color: "white" },
+  btnBox: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+  },
 });
