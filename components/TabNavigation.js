@@ -50,9 +50,17 @@ export const TabNavigation = () => {
           tabBarActiveTintColor: "#7C81FF",
           tabBarIcon: ({ focused }) =>
             focused ? (
-              <Ionicons name="albums" size={24} color="#7C81FF" />
+              <MaterialCommunityIcons
+                name="notebook"
+                size={24}
+                color="#7C81FF"
+              />
             ) : (
-              <Ionicons name="albums-outline" size={24} color="black" />
+              <MaterialCommunityIcons
+                name="notebook-outline"
+                size={24}
+                color="black"
+              />
             ),
         }}
       />
