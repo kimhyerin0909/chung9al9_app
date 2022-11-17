@@ -31,7 +31,7 @@ export const Distance = () => {
 
 const styles = StyleSheet.create({
   layout: {
-    width: "90%",
+    width: "100%",
     backgroundColor: "white",
     flexDirection: "row",
     alignItems: "center",
