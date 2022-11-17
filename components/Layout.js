@@ -1,17 +1,17 @@
 import React from "react";
 import { View } from "react-native";
 
-export const Layout = ({ children }) => {
+export const Layout = ({ children, height }) => {
   return (
     <View
       style={{
         width: "100%",
-        height: "100%",
+        height: height ? height : "100%",
         alignItems: "center",
         backgroundColor: "white",
       }}
     >
-      {children}
+      <View style={{ width: "80%", alignItems: "center" }}>{children}</View>
     </View>
   );
 };
