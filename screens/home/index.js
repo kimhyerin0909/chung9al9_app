@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { Layout } from "../../components/Layout";
 import client from "../../utils/client";
@@ -7,7 +7,7 @@ import { Distance } from "./distance";
 import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import Geolocation from "react-native-geolocation-service";
 import { locationState } from "../recoil/location";
-import moment from "moment";
+import { useTimeDifference } from "../../hooks/useTimeDifference";
 
 export const HomeScreen = () => {
   const distance = useRecoilValue(postDistance);
@@ -29,16 +29,17 @@ export const HomeScreen = () => {
       const response = await client.get(
         `getPost?lat=${location.lat}&lon=${location.lon}&distance=${distance}`
       );
-      console.log(response.data);
-      setPosts(response.data);
-    } else {
-      console.log("location is null");
-    }
+
+      let arr = [];
+      response.data.forEach((data) => {
+        let time = useTimeDifference(new Date(data["write_time"]));
+        arr.push({ ...data, write_time: time });
+      });
+      setPosts(arr);
+    } else console.log("location is null");
   };
 
-  useMemo(() => getPosts(), [location]);
-
-  useEffect(() => {
+  const getLatLon = () => {
     allowGetLocation().then((result) => {
       if (result === "granted") {
         Geolocation.getCurrentPosition(
@@ -58,7 +59,15 @@ export const HomeScreen = () => {
         );
       }
     });
+  };
+
+  useEffect(() => {
+    getLatLon();
   }, []);
+
+  useEffect(() => {
+    getPosts();
+  }, [location, distance]);
 
   return (
     <>
@@ -93,7 +102,7 @@ export const HomeScreen = () => {
                         {p.address} |
                       </Text>
                       <Text style={[styles.writeTime, styles.info]}>
-                        {moment(p.write_time).format("MM월 DD일 hh시 mm분")}
+                        {p.write_time}
                       </Text>
                     </View>
                     <View style={[styles.addInfoBox, styles.info]}>
@@ -144,7 +153,7 @@ const styles = StyleSheet.create({
   },
   card: {
     maxWidth: "100%",
-    marginBottom: 10,
+    marginBottom: 12,
     borderRadius: 8,
     padding: 10,
     backgroundColor: "white",
