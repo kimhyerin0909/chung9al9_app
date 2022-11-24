@@ -9,9 +9,12 @@ import {
   Image,
   Button,
 } from "react-native";
+import { useSetRecoilState } from "recoil";
 import client from "../../../utils/client";
+import { userIdState } from "../../recoil/user";
 
 export const Login = ({ navigation }) => {
+  const setUser = useSetRecoilState(userIdState);
   const [userId, setUserId] = useState();
   const [password, setPassword] = useState();
 
@@ -27,6 +30,7 @@ export const Login = ({ navigation }) => {
         .then((res) => {
           if (res.data.success) {
             AsyncStorage.setItem("token", res.data.token);
+            setUser(res.data.info["user_id"].toString());
             navigation.navigate("Home");
           } else {
             alert(res.data.message);
