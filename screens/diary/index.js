@@ -5,12 +5,13 @@ import { useQuery } from "react-query";
 import { useRecoilValue } from "recoil";
 import { Layout } from "../../components/Layout";
 import client from "../../utils/client";
-import { userIdState } from "../recoil/user";
+import { hourState, salaryState, userIdState } from "../recoil/user";
 import { DiaryAdd } from "./add";
-import { WorkInfo } from "./workInfo";
 
-export const Diary = () => {
+export const Diary = ({ navigation }) => {
   const userId = useRecoilValue(userIdState);
+  const salary = useRecoilValue(salaryState);
+  const hour = useRecoilValue(hourState);
   const day = new Date();
   const today = `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
   const [month, setMonth] = useState(day.getMonth() + 1);
@@ -20,6 +21,7 @@ export const Diary = () => {
   const [workedTime, setWorkedTime] = useState(0);
   const [clickedDate, setClickedDate] = useState();
   const [isDayClicked, setIsDayClicked] = useState(false);
+  const [isChange, setIsChange] = useState(false);
 
   const getRecords = async () => {
     setWorkedTime(0);
@@ -56,13 +58,21 @@ export const Diary = () => {
   const recordQuery = useQuery(["record"], getRecords);
 
   useEffect(() => {
+    if (salary === null) {
+      alert("마이페이지에서 시급과 근무 시간을 설정해주세요.");
+      navigation.goBack();
+    }
+  }, []);
+
+  useEffect(() => {
     getRecords();
-  }, [month]);
+  }, [month, isChange]);
 
   return (
     <Layout>
       {isDayClicked && (
         <DiaryAdd
+          setIsChange={setIsChange}
           date={clickedDate}
           closePopUp={() => setIsDayClicked(false)}
         />
@@ -88,7 +98,6 @@ export const Diary = () => {
             onDayPress={handleRecord}
           />
         ) : null}
-        {/* <WorkInfo workedTime={workedTime} /> */}
       </View>
     </Layout>
   );
