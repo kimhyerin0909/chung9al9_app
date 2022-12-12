@@ -28,6 +28,7 @@ export const TabNavigation = () => {
         name="Community"
         component={Community}
         options={{
+          unmountOnBlur: true,
           tabBarLabel: "커뮤니티",
           tabBarActiveTintColor: "#7C81FF",
           tabBarIcon: ({ focused }) =>
@@ -41,11 +42,13 @@ export const TabNavigation = () => {
               />
             ),
         }}
+        navigationKey="Home"
       />
       <Tab.Screen
         name="Diary"
         component={Diary}
         options={{
+          unmountOnBlur: true,
           tabBarLabel: "일기장",
           tabBarActiveTintColor: "#7C81FF",
           tabBarIcon: ({ focused }) =>
@@ -63,11 +66,13 @@ export const TabNavigation = () => {
               />
             ),
         }}
+        navigationKey="Diary"
       />
       <Tab.Screen
         name="MyPage"
         component={MyPage}
         options={{
+          unmountOnBlur: true,
           tabBarLabel: "마이페이지",
           tabBarActiveTintColor: "#7C81FF",
           tabBarIcon: ({ focused }) =>
