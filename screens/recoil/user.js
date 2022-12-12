@@ -21,3 +21,15 @@ export const userIdState = atom({
   default: null,
   effects: [asyncStorageEffect("user")],
 });
+
+export const salaryState = atom({
+  key: "SalaryState",
+  default: null,
+  effects: [asyncStorageEffect("salary")],
+});
+
+export const hourState = atom({
+  key: "HourState",
+  default: null,
+  effects: [asyncStorageEffect("hour")],
+});
