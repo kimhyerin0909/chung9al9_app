@@ -5,29 +5,33 @@ import { useQuery } from "react-query";
 import { useRecoilValue } from "recoil";
 import { Layout } from "../../components/Layout";
 import client from "../../utils/client";
-import { hourState, salaryState, userIdState } from "../recoil/user";
+import { salaryState, userIdState } from "../recoil/user";
 import { DiaryAdd } from "./add";
+import { WorkInfo } from "./workInfo";
 
 export const Diary = ({ navigation }) => {
   const userId = useRecoilValue(userIdState);
   const salary = useRecoilValue(salaryState);
-  const hour = useRecoilValue(hourState);
   const day = new Date();
   const today = `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
   const [month, setMonth] = useState(day.getMonth() + 1);
   const [worked, setWorked] = useState({
     [today]: { marked: true, dotColor: "#DCDCDC" },
   });
-  const [workedTime, setWorkedTime] = useState(0);
+  const [curDate, setCurDate] = useState({
+    year: day.getFullYear(),
+    month: day.getMonth() + 1,
+  });
   const [clickedDate, setClickedDate] = useState();
   const [isDayClicked, setIsDayClicked] = useState(false);
   const [isChange, setIsChange] = useState(false);
+  const [sumHour, setSumHour] = useState(0);
 
   const getRecords = async () => {
-    setWorkedTime(0);
     const res = await client.get(`getRecords?user_id=${userId}&month=${month}`);
+    let sum = 0;
     res.data.forEach((data) => {
-      setWorkedTime((prev) => prev + Number(data["hour"]));
+      sum += Number(data["hour"]);
       let date = data["date"];
       let h = data["hour"];
       setWorked((prev) => ({
@@ -45,6 +49,7 @@ export const Diary = ({ navigation }) => {
         },
       }));
     });
+    setSumHour(sum);
   };
 
   const handleRecord = (data) => {
@@ -65,6 +70,7 @@ export const Diary = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
+    setWorked({ [today]: { marked: true, dotColor: "#DCDCDC" } });
     getRecords();
   }, [month, isChange]);
 
@@ -94,11 +100,15 @@ export const Diary = ({ navigation }) => {
             }}
             markedDates={worked}
             monthFormat={"yyyy년 MM월"}
-            onMonthChange={(mo) => setMonth(mo["month"])}
+            onMonthChange={(mo) => {
+              setCurDate(mo);
+              setMonth(mo["month"]);
+            }}
             onDayPress={handleRecord}
           />
         ) : null}
       </View>
+      <WorkInfo curDate={curDate} sumHour={sumHour} />
     </Layout>
   );
 };
