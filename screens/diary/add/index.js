@@ -4,6 +4,7 @@ import { useRecoilValue } from "recoil";
 import { TimePicker } from "../../../components/TimePicker";
 import client from "../../../utils/client";
 import { salaryState, userIdState } from "../../recoil/user";
+import { Feather } from "@expo/vector-icons";
 
 export const DiaryAdd = ({ date, closePopUp, setIsChange }) => {
   const userId = useRecoilValue(userIdState);
@@ -49,6 +50,12 @@ export const DiaryAdd = ({ date, closePopUp, setIsChange }) => {
     setIsChange((prev) => !prev);
   };
 
+  const deleteRecord = async () => {
+    await client.delete(`/deleteRecord?cal_id=${record["cal_id"]}`);
+    setIsChange((prev) => !prev);
+    closePopUp();
+  };
+
   return (
     <Modal
       onShow={getRecord}
@@ -65,7 +72,19 @@ export const DiaryAdd = ({ date, closePopUp, setIsChange }) => {
             padding: 20,
           }}
         >
-          <Text style={{ color: "#989898" }}>{date["date"]}</Text>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <Text style={{ color: "#989898" }}>{date["date"]}</Text>
+            {date["isRecorded"] && (
+              <Feather
+                onPress={deleteRecord}
+                name="trash-2"
+                size={18}
+                color="black"
+              />
+            )}
+          </View>
           <View style={{ marginBottom: 10 }}>
             <Text
               style={{
@@ -125,6 +144,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#7C81FF",
     alignItems: "center",
     padding: 10,
+    borderRadius: 10,
+  },
+  deleteBtn: {
+    backgroundColor: "#ABABAB",
+    alignItems: "center",
+    padding: 5,
     borderRadius: 10,
   },
 });
