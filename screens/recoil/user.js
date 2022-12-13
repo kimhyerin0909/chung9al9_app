@@ -33,3 +33,9 @@ export const hourState = atom({
   default: null,
   effects: [asyncStorageEffect("hour")],
 });
+
+export const aWeekState = atom({
+  key: "AWeekState",
+  default: null,
+  effects: [asyncStorageEffect("a_week")],
+});
