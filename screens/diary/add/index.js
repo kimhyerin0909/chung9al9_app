@@ -3,8 +3,9 @@ import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { useRecoilValue } from "recoil";
 import { TimePicker } from "../../../components/TimePicker";
 import client from "../../../utils/client";
-import { salaryState, userIdState } from "../../recoil/user";
 import { Feather } from "@expo/vector-icons";
+import { userIdState } from "../../recoil/user/userId";
+import { salaryState } from "../../recoil/user/salary";
 
 export const DiaryAdd = ({ date, closePopUp, setIsChange }) => {
   const userId = useRecoilValue(userIdState);
@@ -32,9 +33,11 @@ export const DiaryAdd = ({ date, closePopUp, setIsChange }) => {
   const recordWork = async () => {
     const st = `${Math.floor(startTime / 60)}:${startTime % 60}`;
     const et = `${Math.floor(endTime / 60)}:${endTime % 60}`;
+    const hr = Math.floor((endTime - startTime) / 60);
+    console.log(hr);
     if (date["isRecorded"]) {
       await client.patch(
-        `/fixRecord?cal_id=${record["cal_id"]}&start_time=${st}&end_time=${et}`
+        `/fixRecord?cal_id=${record["cal_id"]}&start_time=${st}&end_time=${et}&hour=${hr}`
       );
     } else {
       await client.post("/record", {
