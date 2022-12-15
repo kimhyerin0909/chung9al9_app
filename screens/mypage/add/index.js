@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import client from "../../../utils/client";
 
-export const EditWork = ({ userId, setIsChange }) => {
+export const AddWork = ({ userId, setIsChange }) => {
   const [salary, setSalary] = useState("");
   const [hour, setHour] = useState("");
   const [aWeek, setAWeek] = useState("");
