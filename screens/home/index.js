@@ -4,14 +4,23 @@ import { Layout } from "../../components/Layout";
 import client from "../../utils/client";
 import { postDistance } from "../recoil/distance";
 import { Distance } from "./distance";
-import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import Geolocation from "react-native-geolocation-service";
 import { locationState } from "../recoil/location";
 import { useTimeDifference } from "../../hooks/useTimeDifference";
+import { postIdState } from "../recoil/post/postId";
 
-export const HomeScreen = () => {
+export const HomeScreen = ({ navigation }) => {
   const distance = useRecoilValue(postDistance);
   const [location, setLocation] = useRecoilState(locationState);
+  const [, setClickId] = useRecoilState(postIdState);
   const [posts, setPosts] = useState();
 
   const allowGetLocation = async () => {
@@ -77,7 +86,7 @@ export const HomeScreen = () => {
       <ScrollView>
         <View style={styles.postLayout}>
           {posts && (
-            <View style={pstyles(posts).postBox}>
+            <View style={pstyles.postBox}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Text style={styles.subTitle}>내 주변 공고</Text>
                 <Text
@@ -90,36 +99,44 @@ export const HomeScreen = () => {
               </View>
               {posts.map((p) => {
                 const card = (
-                  <View style={styles.card} key={p.post_id}>
-                    <Text style={[styles.title, styles.info]}>{p.title}</Text>
-                    <Text style={[styles.compName, styles.info]}>
-                      {p.comp_name}
-                    </Text>
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
-                      <Text style={[styles.compAdd, styles.info]}>
-                        {p.address} |
+                  <Pressable
+                    onPress={() => {
+                      setClickId(String(p.post_id));
+                      navigation.navigate("Detail");
+                    }}
+                    key={p.post_id}
+                  >
+                    <View style={styles.card}>
+                      <Text style={[styles.title, styles.info]}>{p.title}</Text>
+                      <Text style={[styles.compName, styles.info]}>
+                        {p.comp_name}
                       </Text>
-                      <Text style={[styles.writeTime, styles.info]}>
-                        {p.write_time}
-                      </Text>
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        <Text style={[styles.compAdd, styles.info]}>
+                          {p.address} |
+                        </Text>
+                        <Text style={[styles.writeTime, styles.info]}>
+                          {p.write_time}
+                        </Text>
+                      </View>
+                      <View style={[styles.addInfoBox, styles.info]}>
+                        <Text style={[styles.addContent, styles.info]}>
+                          {p.period}
+                        </Text>
+                        <Text style={[styles.addContent, styles.info]}>
+                          {p.time}
+                        </Text>
+                        <Text style={[styles.addContent, styles.info]}>
+                          {p.day}
+                        </Text>
+                        <Text style={[styles.addContent, styles.info]}>
+                          {p.salary}원
+                        </Text>
+                      </View>
                     </View>
-                    <View style={[styles.addInfoBox, styles.info]}>
-                      <Text style={[styles.addContent, styles.info]}>
-                        {p.period}
-                      </Text>
-                      <Text style={[styles.addContent, styles.info]}>
-                        {p.time}
-                      </Text>
-                      <Text style={[styles.addContent, styles.info]}>
-                        {p.day}
-                      </Text>
-                      <Text style={[styles.addContent, styles.info]}>
-                        {p.salary}원
-                      </Text>
-                    </View>
-                  </View>
+                  </Pressable>
                 );
                 return card;
               })}
@@ -131,13 +148,12 @@ export const HomeScreen = () => {
   );
 };
 
-const pstyles = (props) =>
-  StyleSheet.create({
-    postBox: {
-      width: "80%",
-      justifyContent: "space-between",
-    },
-  });
+const pstyles = StyleSheet.create({
+  postBox: {
+    width: "80%",
+    justifyContent: "space-between",
+  },
+});
 
 const styles = StyleSheet.create({
   subTitle: {
