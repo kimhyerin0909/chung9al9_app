@@ -5,7 +5,8 @@ import { useQuery } from "react-query";
 import { useRecoilValue } from "recoil";
 import { Layout } from "../../components/Layout";
 import client from "../../utils/client";
-import { salaryState, userIdState } from "../recoil/user";
+import { salaryState } from "../recoil/user/salary";
+import { userIdState } from "../recoil/user/userId";
 import { DiaryAdd } from "./add";
 import { WorkInfo } from "./workInfo";
 

@@ -1,13 +1,9 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useRecoilValue } from "recoil";
-import { aWeekState, hourState, salaryState } from "../../recoil/user";
-
+import { salaryState } from "../../recoil/user/salary";
 export const WorkInfo = ({ curDate, sumHour }) => {
-  const hour = useRecoilValue(hourState);
   const salary = useRecoilValue(salaryState);
-  const aWeek = useRecoilValue(aWeekState);
-  const extraWork = Math.floor(sumHour - hour * aWeek * 4.34);
   return (
     <View style={styles.box}>
       <View>

@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { useSetRecoilState } from "recoil";
 import client from "../../../utils/client";
-import { userIdState } from "../../recoil/user";
+import { userIdState } from "../../recoil/user/userId";
 
 export const Login = ({ navigation }) => {
   const setUser = useSetRecoilState(userIdState);
